@@ -39,13 +39,16 @@ jobs:
           appium --log appium.log &
           sleep 5
 
+      # MENGGUNAKAN EMULATOR RINGAN KHUSUS CI/CD (API 30 - ANDROID 11)
       - name: Run Android Emulator & Execute Tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 34
-          target: google_apis
+          api-level: 30
+          target: default
           arch: x86_64
-          profile: Pixel_6
+          profile: Nexus 6
+          disable-animations: true
+          emulator-options: -no-window -no-snapshot -noaudio -no-boot-anim
           script: ./gradlew test
 
       - name: Upload Appium Logs if failed
