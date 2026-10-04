@@ -1,0 +1,52 @@
+name: Run test android on pipeline
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  # Tetap dipertahankan sesuai kode asli Anda
+  JAVA_VERSION: '17'
+  GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2
+
+jobs:
+  test:
+    # Menggunakan runner Windows agar sesuai kebutuhan Anda
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository test
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Menyiapkan lingkungan Java di server GitHub
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      # Menginstal Appium Server dan Driver UiAutomator2 di Windows
+      - name: Install Appium & UIAutomator2
+        run: |
+          npm install -g appium
+          appium driver install uiautomator2
+
+      # Menjalankan Appium Server di latar belakang (Background Process Windows)
+      - name: Start Appium Server
+        run: start /B appium
+
+      # Menjalankan Emulator Android dan mengeksekusi pengujian otomasi Gradle
+      - name: Run Android Emulator & Execute Tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          profile: Pixel_6
+          script: |
+            echo "Emulator berhasil dinyalakan di GitHub Actions!"
+            ./gradlew test
