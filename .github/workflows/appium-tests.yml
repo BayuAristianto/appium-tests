@@ -31,6 +31,13 @@ jobs:
           npm install -g appium
           appium driver install uiautomator2
 
+      # Mengaktifkan izin KVM perangkat keras Linux di server GitHub Actions
+      - name: Enable KVM group perms
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm.rules
+          sudo udevadm control --reload-rules && sudo udevadm trigger
+
+      Sir izin akses gradlew
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
@@ -39,7 +46,7 @@ jobs:
           appium --log appium.log &
           sleep 5
 
-      # MENGGUNAKAN EMULATOR RINGAN KHUSUS CI/CD (API 30 - ANDROID 11)
+      # KONFIGURASI EMULATOR PALING CEPAT DAN RINGAN KHUSUS CI
       - name: Run Android Emulator & Execute Tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -47,8 +54,9 @@ jobs:
           target: default
           arch: x86_64
           profile: Nexus 6
+          force-avd-creation: true
           disable-animations: true
-          emulator-options: -no-window -no-snapshot -noaudio -no-boot-anim
+          emulator-options: -no-window -no-snapshot -noaudio -no-boot-anim -gpu swiftshader_indirect
           script: ./gradlew test
 
       - name: Upload Appium Logs if failed
