@@ -33,7 +33,7 @@ jobs:
 
       - name: Start Appium Server
         run: |
-          Start-Process appium -NoNewWindow
+          Start-Job -ScriptBlock { appium }
 
       - name: Run Android Emulator & Execute Tests
         uses: reactivecircus/android-emulator-runner@v2
