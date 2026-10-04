@@ -53,8 +53,11 @@ jobs:
           profile: Nexus 6
           force-avd-creation: true
           disable-animations: true
-          emulator-options: -no-window -no-snapshot -noaudio -no-boot-anim -gpu swiftshader_indirect
-          script: ./gradlew test
+          emulator-options: -no-window -no-snapshot -noaudio -no-boot-anim -gpu swiftshader_indirect -no-accel
+          script: |
+            echo "Menunggu kestabilan sistem internal 10 detik sebelum tes..."
+            sleep 10
+            ./gradlew test
 
       - name: Upload Test Report If Failed
         if: always()
