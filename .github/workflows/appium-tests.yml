@@ -45,5 +45,8 @@ jobs:
           arch: x86_64
           profile: Pixel_6
           script: |
+            echo "Memberikan izin eksekusi untuk gradlew..."
+            chmod +x gradlew
             echo "Emulator berhasil dinyalakan di GitHub Actions Ubuntu!"
             ./gradlew test
+      
