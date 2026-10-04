@@ -6,13 +6,11 @@ on:
       - master
 
 env:
-  # Tetap dipertahankan sesuai kode asli Anda
   JAVA_VERSION: '17'
   GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2
 
 jobs:
   test:
-    # Menggunakan runner Windows agar sesuai kebutuhan Anda
     runs-on: windows-latest
 
     steps:
@@ -21,7 +19,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Menyiapkan lingkungan Java di server GitHub
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
@@ -29,17 +26,15 @@ jobs:
           distribution: 'temurin'
           cache: 'gradle'
 
-      # Menginstal Appium Server dan Driver UiAutomator2 di Windows
       - name: Install Appium & UIAutomator2
         run: |
           npm install -g appium
           appium driver install uiautomator2
 
-      # Menjalankan Appium Server di latar belakang (Background Process Windows)
       - name: Start Appium Server
-        run: start /B appium
+        run: |
+          Start-Process appium -NoNewWindow
 
-      # Menjalankan Emulator Android dan mengeksekusi pengujian otomasi Gradle
       - name: Run Android Emulator & Execute Tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
