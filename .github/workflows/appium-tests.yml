@@ -53,10 +53,11 @@ jobs:
           profile: Nexus 6
           force-avd-creation: true
           disable-animations: true
-          emulator-options: -no-window -no-snapshot -noaudio -no-boot-anim -gpu swiftshader_indirect -no-accel
+          # Mengaktifkan opsi rendering software murni (-gpu swiftshader_indirect) agar performa aplikasi stabil di server cloud
+          emulator-options: -no-window -no-snapshot -noaudio -no-boot-anim -gpu swiftshader_indirect
           script: |
-            echo "Menunggu kestabilan sistem internal 10 detik sebelum tes..."
-            sleep 10
+            echo "Menunggu 20 detik agar sistem operasi Android benar-benar stabil di menu utama..."
+            sleep 20
             ./gradlew test
 
       - name: Upload Test Report If Failed
