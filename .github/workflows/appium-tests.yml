@@ -11,7 +11,8 @@ env:
 
 jobs:
   test:
-    runs-on: windows-latest
+    # DIUBAH KE UBUNTU KARENA DIWAJIBKAN OLEH EMULATOR RUNNER
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository test
@@ -31,9 +32,10 @@ jobs:
           npm install -g appium
           appium driver install uiautomator2
 
+      # JALAN DI BACKGROUND MENGGUNAKAN STANDAR LINUX (&)
       - name: Start Appium Server
         run: |
-          Start-Job -ScriptBlock { appium }
+          appium &
 
       - name: Run Android Emulator & Execute Tests
         uses: reactivecircus/android-emulator-runner@v2
@@ -43,5 +45,5 @@ jobs:
           arch: x86_64
           profile: Pixel_6
           script: |
-            echo "Emulator berhasil dinyalakan di GitHub Actions!"
+            echo "Emulator berhasil dinyalakan di GitHub Actions Ubuntu!"
             ./gradlew test
